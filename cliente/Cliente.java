@@ -12,14 +12,28 @@ import java.util.Set;
 
 import server.ServicoDeVotacao;
 
+/**
+ * A classe Cliente representa um cliente que interage com o sistema de votação por meio de uma interface de linha de comando.
+ * Os eleitores podem votar em candidatos e obter resultados da votação usando esta aplicação.
+ */
 public class Cliente {
 
+    /**
+     * Verifica se um nome é válido, ou seja, contém apenas letras e espaços.
+     *
+     * @param nome O nome a ser validado.
+     * @return true se o nome for válido, false caso contrário.
+     */
     public static boolean isNomeValido(String nome) {
         return nome.matches("[a-zA-Z ]+");
     }
 
+    /**
+     * O método principal da classe, que permite aos eleitores votar em candidatos.
+     *
+     * @param args Argumentos da linha de comando (não são utilizados neste caso).
+     */
     public static void main(String args[]) {
-
         Scanner sc = new Scanner(System.in);
         String sair;
         Set<String> eleitores = new HashSet<>();
@@ -29,6 +43,7 @@ public class Cliente {
             System.out.println("Para votar, digite seu nome e escolha um candidato pelo número de votação:");
 
             try {
+                // Procura o serviço de votação remoto no endereço especificado.
                 ServicoDeVotacao votacao = (ServicoDeVotacao) Naming.lookup("rmi://localhost:2126/votacao");
 
                 System.out.println("Digite seu nome:");
@@ -45,6 +60,7 @@ public class Cliente {
 
                 System.out.println("\nLista de Candidatos: \n");
 
+                // Define os candidatos com números de votação.
                 HashMap<Integer, String> candidatos = new HashMap<>();
                 candidatos.put(1, "Luiz Ferreira");
                 candidatos.put(2, "Marcos Silva");
@@ -72,8 +88,10 @@ public class Cliente {
                     }
                 }
 
+                // Registra o voto no serviço de votação remoto.
                 votacao.votar(nome, candidato);
 
+                // Adiciona o eleitor à lista de eleitores que já votaram.
                 eleitores.add(nome);
                 System.out.println("\nSeu voto foi computado com sucesso!\n");
 
